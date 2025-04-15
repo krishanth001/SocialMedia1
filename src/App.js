@@ -11,12 +11,9 @@ import { NewPost } from './Newpost';
 import { Postpage } from './Postpage';
 import { Footer } from './Footer';
 import { format } from 'date-fns'
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
-
-  const [search, setSearch] = useState()
-
-  const [searchResults, setSearchResults] = useState('')
   
   const [posts, setPosts] = useState([{
     id: 1,
@@ -44,13 +41,17 @@ function App() {
   }
 ])
 
+const [search, setSearch] = useState('')
+
+const [searchResults, setSearchResults] = useState([])
+
 const [postTitle, setPostTitle] = useState('')
 const [postBody, setPostBody] = useState('')
 
 useEffect(() => {
-  const filteredResults = posts.filter((Post) => ((Post.body).toLowerCase()).includes((search.toLowerCase()) || ((Post.title).toLowerCase()).includes(search.toLowerCase())))
+  const filteredResults = posts.filter((post) => ((post.body).toLowerCase()).includes(search.toLowerCase()) || ((post.title).toLowerCase()).includes(search.toLowerCase()))
   setSearchResults(filteredResults.reverse())
-},[search, posts])
+},[posts, search])
 
 const handleSubmit = (e) => {
   e.preventDefault()
@@ -69,12 +70,13 @@ const handleSubmit = (e) => {
       <Header title= "Krishanth media" />
       <Nav search={search} 
       setSearch={{setSearch}} />
-      <Home posts = {searchResults} />
-      <NewPost handleSubmit = {handleSubmit} postTitle= {postTitle} setPostTitle = {setPostTitle}
-      postBody = {postBody} setPostBody={setPostBody} />
-      <Postpage />
-      <About />
-      <Missing />
+      <Routes>
+        <Route path='/' element = {<Home posts = {searchResults} />} />
+        <Route path='post' element = { <NewPost handleSubmit = {handleSubmit} postTitle= {postTitle} setPostTitle = {setPostTitle}
+      postBody = {postBody} setPostBody={setPostBody} />}/>
+      <Route path='about' element = {<About />} />
+      <Route path='*' element = {<Missing />} />
+      </Routes>
       <Footer />
 
     </div>
