@@ -11,7 +11,7 @@ import { NewPost } from './Newpost';
 import { Postpage } from './Postpage';
 import { Footer } from './Footer';
 import { format } from 'date-fns'
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 function App() {
   
@@ -47,6 +47,7 @@ const [searchResults, setSearchResults] = useState([])
 
 const [postTitle, setPostTitle] = useState('')
 const [postBody, setPostBody] = useState('')
+const navigate = useNavigate('')
 
 useEffect(() => {
   const filteredResults = posts.filter((post) => ((post.body).toLowerCase()).includes(search.toLowerCase()) || ((post.title).toLowerCase()).includes(search.toLowerCase()))
@@ -62,20 +63,30 @@ const handleSubmit = (e) => {
   setPosts(allPosts)
   setPostTitle('')
   setPostBody('')
+  navigate('/') 
+}
+
+const handleDelete = (id) => {
+  const filterList = posts.filter((post) => post.id !== id)
+  setPosts(filterList)
+  navigate('/') 
 }
 
 
   return (
     <div className="App">
-      <Header title= "Krishanth media" />
+      <Header title= "Krish media" />
       <Nav search={search} 
       setSearch={{setSearch}} />
       <Routes>
         <Route path='/' element = {<Home posts = {searchResults} />} />
-        <Route path='post' element = { <NewPost handleSubmit = {handleSubmit} postTitle= {postTitle} setPostTitle = {setPostTitle}
-      postBody = {postBody} setPostBody={setPostBody} />}/>
-      <Route path='about' element = {<About />} />
-      <Route path='*' element = {<Missing />} />
+        <Route path='post'>
+          <Route index element = { <NewPost handleSubmit = {handleSubmit} postTitle= {postTitle} setPostTitle = {setPostTitle} 
+          postBody = {postBody} setPostBody={setPostBody} />}/>
+          <Route path=':id' element = {<Postpage posts = {posts} handleDelete = {handleDelete} />} />
+        </Route>  
+        <Route path='about' element = {<About />} />
+        <Route path='*' element = {<Missing />} />
       </Routes>
       <Footer />
 

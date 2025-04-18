@@ -4,8 +4,8 @@ import { Link } from "react-router-dom"
 export const Nav = ({search, setSearch}) => {
   return (
     <nav className='Nav'>
-        <form className='Form' onSubmit={(e) => e.preventDefault()}>
-            <label searchFor = "search">search</label>
+        <form className='searchForm' onSubmit={(e) => e.preventDefault()}>
+            <label searchFor = "search">Search Post</label>
             <input type='text'
             id='input'
             className='input'
